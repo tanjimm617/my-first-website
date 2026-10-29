@@ -1,5 +1,5 @@
 const button = document.getElementById("helloButton");
-
+const message = document.getElementById("message");
 
 button.addEventListener("click", function () {
     message.textContent = "Congratulations! Your JavaScript works!";
@@ -11,9 +11,10 @@ const countButton = document.querySelector("#countButton");
 const clickCount = document.querySelector("#clickCount");
 
 countButton.addEventListener("click", function () {
-  count = count + 1;
-  clickCount.textContent = count;
+    count = count + 1;
+    clickCount.textContent = count;
 });
+
 
 const greetingForm = document.querySelector("#greetingForm");
 const userName = document.querySelector("#userName");
@@ -72,7 +73,7 @@ loadUserButton.addEventListener("click", async function () {
 });
 
 const userForm = document.getElementById("userForm");
-const message = document.getElementById("message");
+const userMessage = document.getElementById("userMessage");
 
 userForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -80,7 +81,7 @@ userForm.addEventListener("submit", async (event) => {
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
 
-  message.textContent = "Saving user...";
+  userMessage.textContent = "Saving user...";
 
   try {
     const response = await fetch("/api/db-users", {
@@ -97,13 +98,13 @@ userForm.addEventListener("submit", async (event) => {
       throw new Error(data.error || "Failed to save user");
     }
 
-    message.textContent =
-      `Success! ${data.name} has been saved to the database.`;
+    userMessage.textContent =
+  `Success! ${data.name} has been saved to the database.`;
 
     userForm.reset();
     await loadUsers();
   } catch (error) {
-    message.textContent = `Error: ${error.message}`;
+    userMessage.textContent = `Error: ${error.message}`;
   }
 })
 

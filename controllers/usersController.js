@@ -1,21 +1,12 @@
 
-const pool = require("../config/db");
+const {
+  getAllUsers,
+  createUser: createUserModel,
+  updateUser: updateUserModel,
+  deleteUser: deleteUserModel,
+} = require("../models/userModel");
 
-// GET: Fetch all users
-async function getUsers(req, res) {
-  try {
-    const result = await pool.query(
-      "SELECT * FROM users ORDER BY id ASC"
-    );
-
-    res.json(result.rows);
-  } catch (error) {
-    console.error("Error fetching users:", error.message);
-    res.status(500).json({ error: "Failed to fetch users" });
-  }
-}
-
-// Shared validation for POST and PUT
+// Validate name and email
 function validateUser(req, res) {
   const { name, email } = req.body;
 
@@ -51,21 +42,30 @@ function validateUser(req, res) {
   return { name: cleanName, email: cleanEmail };
 }
 
+// GET: Fetch all users
+async function getUsers(req, res) {
+  try {
+    const users = await getAllUsers();
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+}
+
 // POST: Create a user
 async function createUser(req, res) {
   const user = validateUser(req, res);
   if (!user) return;
 
   try {
-    const result = await pool.query(
-      "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *",
-      [user.name, user.email]
-    );
-
-    res.status(201).json(result.rows[0]);
+    const newUser = await createUserModel(user.name, user.email);
+    res.status(201).json(newUser);
   } catch (error) {
     if (error.code === "23505") {
-      return res.status(409).json({ error: "Email already exists" });
+      return res.status(409).json({
+        error: "Email already exists",
+      });
     }
 
     console.error("Error creating user:", error.message);
@@ -85,22 +85,22 @@ async function updateUser(req, res) {
   if (!user) return;
 
   try {
-    const result = await pool.query(
-      `UPDATE users
-       SET name = $1, email = $2
-       WHERE id = $3
-       RETURNING *`,
-      [user.name, user.email, Number(id)]
+    const updatedUser = await updateUserModel(
+      Number(id),
+      user.name,
+      user.email
     );
 
-    if (result.rows.length === 0) {
+    if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.json(result.rows[0]);
+    res.json(updatedUser);
   } catch (error) {
     if (error.code === "23505") {
-      return res.status(409).json({ error: "Email already exists" });
+      return res.status(409).json({
+        error: "Email already exists",
+      });
     }
 
     console.error("Error updating user:", error.message);
@@ -108,7 +108,7 @@ async function updateUser(req, res) {
   }
 }
 
-// DELETE: Remove a user
+// DELETE: Delete a user
 async function deleteUser(req, res) {
   const id = req.params.id;
 
@@ -117,12 +117,9 @@ async function deleteUser(req, res) {
   }
 
   try {
-    const result = await pool.query(
-      "DELETE FROM users WHERE id = $1 RETURNING id",
-      [Number(id)]
-    );
+    const deletedUser = await deleteUserModel(Number(id));
 
-    if (result.rows.length === 0) {
+    if (!deletedUser) {
       return res.status(404).json({ error: "User not found" });
     }
 

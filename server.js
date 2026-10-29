@@ -3,10 +3,20 @@ const express = require("express");
 const path = require("path");
 const pool = require("./config/db");
 const userRoutes = require("./routes/users");
+const helmet = require("helmet");
 
 const app = express();
 
-app.use(express.json());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        connectSrc: ["'self'", "https://jsonplaceholder.typicode.com"],
+      },
+    },
+  })
+);
+app.use(express.json({ limit: "10kb" }));
 app.use("/api", userRoutes);
 app.use(express.static(path.join(__dirname, "public")));
 
