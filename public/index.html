@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First Website</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Welcome to My Website!</h1>
+    <p>This is my first web development project.</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>About Me</h2>
+      <p>I am learning full-stack web development.</p>
+<div class="skill-list">
+  <div class="skill-card">
+    <h3>HTML</h3>
+    <p>Website structure</p>
+  </div>
+
+  <div class="skill-card">
+    <h3>CSS</h3>
+    <p>Website design</p>
+  </div>
+
+  <div class="skill-card">
+    <h3>JavaScript</h3>
+    <p>Website interaction</p>
+  </div>
+</div>
+      <button id="helloButton">Click Me</button>
+      <p id="message"></p>
+
+
+ <h2>API User</h2>
+ <button id="loadUserButton">Load User</button>
+ <p id="userResult">Click the button to load data.</p>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>My First Website — 2026</p>
+  </footer>
+  <section>
+  <h2>Add New User</h2>
+
+  <form id="userForm">
+    <div>
+      <label for="name">Name:</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+      />
+    </div>
+
+    <button type="submit">Add User</button>
+  </form>
+
+  <p id="message"></p>
+  <h2>All Users</h2>
+<button type="button" id="loadUsers">Load Users</button>
+<ul id="userList"></ul>
+</section>
+</body>
+
+<div class="counter-box">
+  <p>Button clicked: <span id="clickCount">0</span></p>
+  <button id="countButton">Count Clicks</button>
+</div>
+
+
+<h2>Personal Greeting</h2>
+
+<form id="greetingForm">
+  
+<label for="userName">Your name:</label>
+  <input
+    type="text"
+    id="userName"
+    placeholder="Enter your name"
+  />
+ 
+  <button type="submit">Say Hello</button>
+</form>
+
+<p id="greetingMessage"></p>
+
+</html>
