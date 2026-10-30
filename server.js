@@ -1,11 +1,23 @@
-
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const pool = require("./config/db");
 const userRoutes = require("./routes/users");
 const helmet = require("helmet");
+const { rateLimit } = require("express-rate-limit");
 
 const app = express();
+app.set("trust proxy", 1);
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: {
+    error: "Too many requests. Please try again later.",
+  },
+});
 
 app.use(
   helmet({
@@ -18,9 +30,10 @@ app.use(
 );
 app.use(express.json({ limit: "10kb" }));
 app.use("/api", userRoutes);
+app.use("/api", apiLimiter);
 app.use(express.static(path.join(__dirname, "public")));
 
-const PORT = 3000; 
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
